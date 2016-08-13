@@ -14,5 +14,15 @@ class tseId():
                 tselist.append(id)
         return tselist
 
+    def getAllotcId(self):
+        workdir = 'D:\\stock_database\\'
+        tselist = []
+        f = open(workdir+'otc.csv', 'r')
+        for row in csv.DictReader(f):
+            id = re.sub('\D','',row['id'])
+            if len(id) != 0:
+                tselist.append(id)
+        return tselist
+
 if __name__ == '__main__':
     testId.getAlltseId()
