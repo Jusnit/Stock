@@ -7,32 +7,46 @@ import datetime
 import matplotlib
 import matplotlib.pyplot as plt
 import re
+from yahoo_finance import Share
 from ast import literal_eval
+from tseId import tseId
 # from matplotlib.finance import num2date
 from matplotlib.finance import candlestick_ohlc
 from matplotlib.finance import date2num
 from urllib2 import URLError
 
-url_front = 'http://mis.twse.com.tw/stock/api/getStockInfo.jsp?ex_ch=tse_'
+url_front = 'http://mis.twse.com.tw/stock/api/getStockInfo.jsp?ex_ch='
 
-while True:
-    stock = raw_input('enter stock index: ')
-    if len(stock) != 4:
-        continue
-    else:
-        break
+# while True:
+#     stock = raw_input('enter stock index: ')
+#     if len(stock) != 4:
+#         continue
+#     else:
+#         break
+tseIds = tseId()
+tseIdlist = tseIds.getAlltseId()
+# print tseIdlist
 # print re.sub('[-]','',time.strftime('%Y-%m-%d'))
 ma = []
 c = 0
 total = 0
 count = 0
-print type(count)
-for i in range(0,30):
+ma_five = []
+url_content = ''
+tseidcount = 0
+for id in tseIdlist[:50]:
+    tseidcount = tseidcount+1
+    if tseidcount == len(tseIdlist):
+        url_content = url_content+'tse_'+id+'.tw'
+    else:
+        url_content = url_content+'tse_'+id+'.tw|'
+
+for i in range(0,50):
     # print count
     day_temp = datetime.datetime.strftime(datetime.datetime.now()-datetime.timedelta(i),'%Y-%m-%d')
     day = re.sub('-','',day_temp);
-    url = url_front + stock + '.tw&d='+day+'&json=1&delay=0'
-    # print url
+    url = url_front + url_content+'&d='+day+'&json=1&delay=0'
+    print url
     req = requests.session()
     req.get('http://mis.twse.com.tw/stock/index.jsp',
                 headers = {'Accept-Language':'zh-TW'}
@@ -46,8 +60,9 @@ for i in range(0,30):
         continue
     else:
         count = count+1
-    datastr = json.dumps(datajson,indent=None)
+    datastr = json.dumps(datajson,indent=4)
     data = literal_eval(datastr)
+    print data
     z = data[0]['z']
     total += float(z)
     if(count == 5):
