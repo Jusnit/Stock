@@ -7,22 +7,28 @@ class tseId():
     def getAlltseId(self):
         workdir = 'D:\\stock_database\\'
         tselist = []
+        tsenamelist = []
         f = open(workdir+'tse.csv', 'r')
         for row in csv.DictReader(f):
-            id = re.sub('\D','',row['id'])
-            if len(id) != 0:
-                tselist.append(id)
-        return tselist
+            stockid = re.sub('\D','',row['id'])
+            name = re.sub('\d','',row['id'])
+            if len(stockid) != 0:
+                tselist.append(stockid)
+                tsenamelist.append(name)
+        return zip(tselist,tsenamelist)
 
     def getAllotcId(self):
         workdir = 'D:\\stock_database\\'
-        tselist = []
+        otclist = []
+        otcnamelist = []
         f = open(workdir+'otc.csv', 'r')
         for row in csv.DictReader(f):
-            id = re.sub('\D','',row['id'])
-            if len(id) != 0:
-                tselist.append(id)
-        return tselist
+            stockid = re.sub('\D','',row['id'])
+            stockname = re.sub('\d','',row['id'])
+            if len(stockid) != 0:
+                otclist.append(stockid)
+                otcnamelist.append(stockname)
+        return zip(otclist,otcnamelist)
 
 if __name__ == '__main__':
     testId.getAlltseId()
